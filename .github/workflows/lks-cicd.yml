@@ -84,7 +84,7 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Deploy to Elastic Beanstalk
+      - name: Create Elastic Beanstalk Application Version
         run: |
           aws elasticbeanstalk create-application-version \
             --application-name ${{ vars.EB_APPLICATION_NAME }} \
@@ -92,6 +92,8 @@ jobs:
             --source-bundle S3Bucket=${{ vars.S3_BUCKET_NAME }},S3Key=flask-app.zip \
             --process || true
 
+      - name: Update Elastic Beanstalk Environment
+        run: |
           aws elasticbeanstalk update-environment \
             --environment-name ${{ vars.EB_ENVIRONMENT_NAME }} \
             --version-label $GITHUB_SHA
